@@ -83,3 +83,6 @@ chart1 = alt.Chart(top_products).mark_bar().encode(
 
 #display the chart
 st.altair_chart(chart1, use_container_width = True)
+
+#piechart
+df['Country'].value_counts().plot(kind = "pie", autopct = "%1.1f%%")
