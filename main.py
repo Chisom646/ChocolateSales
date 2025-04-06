@@ -85,4 +85,44 @@ chart1 = alt.Chart(top_products).mark_bar().encode(
 st.altair_chart(chart1, use_container_width = True)
 
 #piechart
-df['Country'].value_counts().plot(kind = "pie", autopct = "%1.1f%%")
+data = filtered_df.groupby("Country")["Amount"].sum().reset_index()
+data['percent'] = data['Amount'] / data['Amount'].sum() * 100
+
+
+st.write(data)
+
+chart2 = alt.Chart(data).mark_arc().encode(
+    theta = alt.Theta('Amount', type = "quantitative", title = "Percentage of country"),
+    color = alt.Color('Country', type = "nominal"),
+    tooltip = ['Country', 'Amount', alt.Tooltip('percent:Q', format='.2f')] 
+)
+
+
+st.altair_chart(chart2, use_container_width = True)
+
+
+#group by country
+country_gain = filtered_df.groupby("Country")["Amount"].sum().reset_index()
+st.write(country_gain)
+
+chart3 = alt.Chart(country_gain).mark_bar().encode(
+    x = alt.X("Country"),
+    y = alt.Y("Amount", title = "Revenue($)"),
+    color = alt.Color("Amount")
+)
+
+st.altair_chart(chart3, use_container_width = True)
+
+#sales by salesperson (Bar)
+
+sales_person = filtered_df.groupby("Sales Person")["Amount"].sum().reset_index()
+
+st.write(sales_person)
+
+chart4 = alt.Chart(sales_person).mark_bar().encode(
+    x = alt.X("Amount", title = "Revenue($)"),
+    y = alt.Y("Sales Person"),
+    color = alt.Color("Amount")
+)
+
+st.altair_chart(chart4, use_container_width = True)
