@@ -101,28 +101,32 @@ chart2 = alt.Chart(data).mark_arc().encode(
 st.altair_chart(chart2, use_container_width = True)
 
 
-#group by country
-country_gain = filtered_df.groupby("Country")["Amount"].sum().reset_index()
-st.write(country_gain)
-
-chart3 = alt.Chart(country_gain).mark_bar().encode(
-    x = alt.X("Country"),
-    y = alt.Y("Amount", title = "Revenue($)"),
-    color = alt.Color("Amount")
-)
-
-st.altair_chart(chart3, use_container_width = True)
-
-#sales by salesperson (Bar)
-
 sales_person = filtered_df.groupby("Sales Person")["Amount"].sum().reset_index()
 
 st.write(sales_person)
 
-chart4 = alt.Chart(sales_person).mark_bar().encode(
+chart3 = alt.Chart(sales_person).mark_bar().encode(
     x = alt.X("Amount", title = "Revenue($)"),
     y = alt.Y("Sales Person"),
     color = alt.Color("Amount")
 )
 
-st.altair_chart(chart4, use_container_width = True)
+st.altair_chart(chart3, use_container_width = True)
+
+#change date to datetime
+
+df["Date"] = pd.to_datetime(df["Date"])
+
+#extract month from date
+df['Month'] = df['Date'].dt.month
+
+#Group by revenue and sum the revenue
+month_sales = df.groupby("Month")["Amount"].sum().reset_index()
+st.write(month_sales)
+
+chart4 = alt.Chart(month_sales).mark_line().encode(
+    x = alt.X("Month" , title = "Sales for each month."),
+    y = alt.Y("Amount")
+)
+
+st.altair_chart(chart4 , use_container_width = True)
